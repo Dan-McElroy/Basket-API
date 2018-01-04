@@ -38,7 +38,7 @@ namespace CheckoutAPI.Controllers
         /// </summary>
         /// <param name="itemId"></param>
         [HttpDelete]
-        public void DeleteItem(string itemId)
+        public void RemoveItem(string itemId)
         {
             
         }
