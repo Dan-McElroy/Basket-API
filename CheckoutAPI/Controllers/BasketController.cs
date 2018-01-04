@@ -3,6 +3,9 @@ using System;
 
 namespace CheckoutAPI.Controllers
 {
+    /// <summary>
+    /// Controller for all basket-related operations.
+    /// </summary>
     [Produces("application/json")]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -24,6 +27,7 @@ namespace CheckoutAPI.Controllers
         /// Thrown if the quantity provided is below 1.
         /// </exception>
         [HttpPost]
+        [HttpPost("item-id/{itemId}/quantity/{quantity}")]
         public void AddItem(string itemId, int quantity = 1)
         {
             if (quantity < 1)
@@ -45,6 +49,7 @@ namespace CheckoutAPI.Controllers
         /// the store.
         /// </exception>
         [HttpPut]
+        [HttpPut("item-id/{itemId}/quantity/{quantity}")]
         public void EditItemQuantity(string itemId, int quantity)
         {
             
@@ -59,6 +64,7 @@ namespace CheckoutAPI.Controllers
         /// sucessfully regardless.
         /// </remarks>
         [HttpDelete]
+        [HttpDelete("item-id/{itemId}")]
         public void RemoveItem(string itemId)
         {
             
