@@ -3,7 +3,8 @@
 namespace CheckoutAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Basket")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class BasketController : Controller
     {
         [HttpPost]
