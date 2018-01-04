@@ -65,7 +65,7 @@ namespace CheckoutAPI.Controllers
         }
 
         /// <summary>
-        /// Clears the basket of items.
+        /// Clears the basket of all items.
         /// </summary>
         /// <remarks>
         /// If the basket is already empty, this method will return succesfully
