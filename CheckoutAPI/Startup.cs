@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CheckoutAPI.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,9 @@ namespace CheckoutAPI
         {
             services.AddMvc();
             services.AddApiVersioning();
+
+            // Allows Dependency Injection of the Basket.
+            services.AddSingleton<IBasket, Basket>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

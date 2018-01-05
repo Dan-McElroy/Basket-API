@@ -3,7 +3,7 @@
 namespace CheckoutAPI.Models
 {
     /// <summary>
-    /// A representation of the items in a basket,
+    /// A representation of the items in a <see cref="Basket"/>,
     /// and their quantities.
     /// </summary>
     public class BasketItem

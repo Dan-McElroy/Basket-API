@@ -1,51 +1,40 @@
-﻿using CheckoutAPI.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace CheckoutAPI.Controllers
+namespace CheckoutAPI.Models
 {
     /// <summary>
-    /// Controller for all basket-related operations.
+    /// A basket of items to be ordered.
     /// </summary>
-    [Produces("application/json")]
-    [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
-    public class BasketController : Controller
+    public class Basket : IBasket
     {
-        /// <summary>
-        /// The basket for the system.
-        /// </summary>
-        private IBasket Basket { get; set; }
+        // TODO Make threadsafe.
+        private ICollection<BasketItem> Items { get; }
 
-        public BasketController(IBasket basket)
+        /// <summary>
+        /// Default constructor for <see cref="Basket"/>.
+        /// </summary>
+        public Basket()
         {
-            Basket = basket;
+            Items = new List<BasketItem>();
         }
+
+        #region IBasket Methods
 
         /// <summary>
         /// Adds an item by its unique ID to the basket.
         /// </summary>
         /// <param name="itemId">The ID of the item to be added.</param>
         /// <param name="quantity">
-        /// An optional quantity for the item - the default is 1.
+        /// The quantity of the item.
         /// </param>
         /// <remarks>
         /// If the item already exists in the basket, the existing quantity is
-        /// increased by the amount specified in the request, or 1 if no 
-        /// quantity is provided.
+        /// increased by the amount specified.
         /// </remarks>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if the quantity provided is below 1.
-        /// </exception>
-        [HttpPost]
-        [HttpPost("item-id/{itemId}/quantity/{quantity}")]
-        public void AddItem(string itemId, int quantity = 1)
+        public void AddItem(string itemId, int quantity)
         {
-            if (quantity < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(quantity), 
-                    quantity, "Quantity must be greater than 0.");
-            }
         }
 
         /// <summary>
@@ -63,11 +52,8 @@ namespace CheckoutAPI.Controllers
         /// Thrown if the item with the provided ID does not already exist in
         /// the basket.
         /// </exception>
-        [HttpPut]
-        [HttpPut("item-id/{itemId}/quantity/{quantity}")]
         public void EditItemQuantity(string itemId, int quantity)
         {
-            
         }
 
         /// <summary>
@@ -78,11 +64,8 @@ namespace CheckoutAPI.Controllers
         /// If the item does not exist in the basket, this method will return
         /// sucessfully regardless.
         /// </remarks>
-        [HttpDelete]
-        [HttpDelete("item-id/{itemId}")]
         public void RemoveItem(string itemId)
         {
-            
         }
 
         /// <summary>
@@ -92,10 +75,8 @@ namespace CheckoutAPI.Controllers
         /// If the basket is already empty, this method will return succesfully
         /// regardless.
         /// </remarks>
-        [HttpDelete("all")]
-        public void ClearBasket()
+        public void Clear()
         {
-            
         }
     }
 }
