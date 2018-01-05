@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace CheckoutAPI
+namespace BasketAPI
 {
     public class Program
     {

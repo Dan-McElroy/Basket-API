@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CheckoutAPI.Models
+namespace BasketAPI.Models
 {
     /// <summary>
     /// A representation of the items in a <see cref="Basket"/>,
@@ -31,12 +31,12 @@ namespace CheckoutAPI.Models
             get { return _id; }
             set
             {
-                _id = value 
+                _id = value
                    ?? throw new ArgumentNullException(nameof(value),
                         "Id cannot be null.");
             }
         }
-        
+
         /// <summary>
         /// Quantity of this item in the basket.
         /// </summary>
@@ -62,7 +62,7 @@ namespace CheckoutAPI.Models
         #endregion
 
         #region Constructor
-    
+
         /// <summary>
         /// Basic constructor for a BasketItem.
         /// </summary>

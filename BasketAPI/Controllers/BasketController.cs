@@ -1,47 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BasketAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
-namespace CheckoutAPI.Models
+namespace BasketAPI.Controllers
 {
     /// <summary>
-    /// A basket of items to be ordered.
+    /// Controller for all basket-related operations.
     /// </summary>
-    public class Basket : IBasket
+    [Produces("application/json")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class BasketController : Controller
     {
-        // TODO Make threadsafe.
-        private ICollection<BasketItem> Items { get; }
-
         /// <summary>
-        /// Default constructor for <see cref="Basket"/>.
+        /// The basket for the system.
         /// </summary>
-        public Basket()
-        {
-            Items = new List<BasketItem>();
-        }
+        private IBasket Basket { get; set; }
 
-        #region IBasket Methods
+        public BasketController(IBasket basket)
+        {
+            Basket = basket;
+        }
 
         /// <summary>
         /// Adds an item by its unique ID to the basket.
         /// </summary>
         /// <param name="itemId">The ID of the item to be added.</param>
         /// <param name="quantity">
-        /// The quantity of the item.
+        /// An optional quantity for the item - the default is 1.
         /// </param>
         /// <remarks>
         /// If the item already exists in the basket, the existing quantity is
-        /// increased by the amount specified.
+        /// increased by the amount specified in the request, or 1 if no
+        /// quantity is provided.
         /// </remarks>
-        public void AddItem(string itemId, int quantity)
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the quantity provided is below 1.
+        /// </exception>
+        [HttpPost]
+        [HttpPost("item-id/{itemId}/quantity/{quantity}")]
+        public void AddItem(string itemId, int quantity = 1)
         {
-            var existingItem = FindById(itemId);
-            if (existingItem != null)
+            if (quantity < 1)
             {
-                existingItem.Quantity += quantity;
-                return;
+                throw new ArgumentOutOfRangeException(nameof(quantity),
+                    quantity, "Quantity must be greater than 0.");
             }
-            Items.Add(new BasketItem(itemId, quantity));
+            Basket.AddItem(itemId, quantity);
         }
 
         /// <summary>
@@ -59,23 +64,11 @@ namespace CheckoutAPI.Models
         /// Thrown if the item with the provided ID does not already exist in
         /// the basket.
         /// </exception>
+        [HttpPut]
+        [HttpPut("item-id/{itemId}/quantity/{quantity}")]
         public void EditItemQuantity(string itemId, int quantity)
-        {
-            var existingItem = FindById(itemId);
-            if (existingItem == null)
-            {
-                throw new InvalidOperationException(
-                    "No such item exists in the basket.");
-            }
-            try
-            {
-                existingItem.Quantity = quantity;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                Items.Remove(existingItem);
-            }
-        }
+            => Basket.EditItemQuantity(itemId, quantity);
+
 
         /// <summary>
         /// Remove an item from the basket.
@@ -85,8 +78,10 @@ namespace CheckoutAPI.Models
         /// If the item does not exist in the basket, this method will return
         /// sucessfully regardless.
         /// </remarks>
+        [HttpDelete]
+        [HttpDelete("item-id/{itemId}")]
         public void RemoveItem(string itemId)
-            => Items.Remove(FindById(itemId));
+            => Basket.RemoveItem(itemId);
 
         /// <summary>
         /// Clears the basket of all items.
@@ -95,16 +90,8 @@ namespace CheckoutAPI.Models
         /// If the basket is already empty, this method will return succesfully
         /// regardless.
         /// </remarks>
-        public void Clear()
-            => Items.Clear();
-
-        #endregion
-
-        #region Private Methods
-
-        private BasketItem FindById(string itemId)
-            => Items.FirstOrDefault(item => item.Id == itemId);
-
-        #endregion
+        [HttpDelete("all")]
+        public void ClearBasket()
+            => Basket.Clear();
     }
 }

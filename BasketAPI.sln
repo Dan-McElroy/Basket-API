@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutAPI", "CheckoutAPI\CheckoutAPI.csproj", "{218A89F8-B51D-461B-A4FA-D3F2EF4186EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketAPI", "BasketAPI\BasketAPI.csproj", "{218A89F8-B51D-461B-A4FA-D3F2EF4186EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{53FA347C-50F1-4360-A7F0-91A6ABE676A0}"
 	ProjectSection(SolutionItems) = preProject

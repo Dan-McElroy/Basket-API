@@ -1,10 +1,10 @@
-﻿using CheckoutAPI.Models;
+﻿using BasketAPI.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CheckoutAPI
+namespace BasketAPI
 {
     public class Startup
     {

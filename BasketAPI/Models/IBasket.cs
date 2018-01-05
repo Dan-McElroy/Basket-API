@@ -1,4 +1,4 @@
-﻿namespace CheckoutAPI.Models
+﻿namespace BasketAPI.Models
 {
     public interface IBasket
     {
