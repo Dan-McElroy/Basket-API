@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BasketAPI.Models
+namespace BasketSystem.Models
 {
     /// <summary>
     /// A representation of the items in a <see cref="Basket"/>,

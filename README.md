@@ -18,4 +18,6 @@ While Add, Edit and Remove could all theoretically be handled by one endpoint, h
 
 Not throwing Exception for delete if Item does not already exist in the basket.
 
-Privatised the collection itself in IBasket as though exposing it would keep the class simple, would also expose undesirable operations to the client.
+Split the models into a separate library to allow internal methods and properties to be unit tested without exposing to the API.
+
+Internalised the collection itself in IBasket as though exposing it would keep the class simple, would also expose undesirable operations to the client.

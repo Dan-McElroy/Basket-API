@@ -1,4 +1,4 @@
-﻿namespace BasketAPI.Models
+﻿namespace BasketSystem.Models
 {
     public interface IBasket
     {

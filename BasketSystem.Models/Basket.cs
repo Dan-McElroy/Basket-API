@@ -1,52 +1,52 @@
-﻿using BasketAPI.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
-namespace BasketAPI.Controllers
+[assembly: InternalsVisibleTo("BasketSystem.Models.Tests")]
+namespace BasketSystem.Models
 {
     /// <summary>
-    /// Controller for all basket-related operations.
+    /// A basket of items to be ordered.
     /// </summary>
-    [Produces("application/json")]
-    [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
-    public class BasketController : Controller
+    public class Basket : IBasket
     {
+        // TODO Make threadsafe.
         /// <summary>
-        /// The basket for the system.
+        /// A collection of items in the <see cref="Basket"/>.
         /// </summary>
-        private IBasket Basket { get; set; }
+        internal ICollection<BasketItem> Items { get; }
 
-        public BasketController(IBasket basket)
+        /// <summary>
+        /// Default constructor for <see cref="Basket"/>.
+        /// </summary>
+        public Basket()
         {
-            Basket = basket;
+            Items = new List<BasketItem>();
         }
+
+        #region IBasket Methods
 
         /// <summary>
         /// Adds an item by its unique ID to the basket.
         /// </summary>
         /// <param name="itemId">The ID of the item to be added.</param>
         /// <param name="quantity">
-        /// An optional quantity for the item - the default is 1.
+        /// The quantity of the item.
         /// </param>
         /// <remarks>
         /// If the item already exists in the basket, the existing quantity is
-        /// increased by the amount specified in the request, or 1 if no
-        /// quantity is provided.
+        /// increased by the amount specified.
         /// </remarks>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if the quantity provided is below 1.
-        /// </exception>
-        [HttpPost]
-        [HttpPost("item-id/{itemId}/quantity/{quantity}")]
-        public void AddItem(string itemId, int quantity = 1)
+        public void AddItem(string itemId, int quantity)
         {
-            if (quantity < 1)
+            var existingItem = FindById(itemId);
+            if (existingItem != null)
             {
-                throw new ArgumentOutOfRangeException(nameof(quantity),
-                    quantity, "Quantity must be greater than 0.");
+                existingItem.Quantity += quantity;
+                return;
             }
-            Basket.AddItem(itemId, quantity);
+            Items.Add(new BasketItem(itemId, quantity));
         }
 
         /// <summary>
@@ -64,11 +64,23 @@ namespace BasketAPI.Controllers
         /// Thrown if the item with the provided ID does not already exist in
         /// the basket.
         /// </exception>
-        [HttpPut]
-        [HttpPut("item-id/{itemId}/quantity/{quantity}")]
         public void EditItemQuantity(string itemId, int quantity)
-            => Basket.EditItemQuantity(itemId, quantity);
-
+        {
+            var existingItem = FindById(itemId);
+            if (existingItem == null)
+            {
+                throw new InvalidOperationException(
+                    "No such item exists in the basket.");
+            }
+            try
+            {
+                existingItem.Quantity = quantity;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Items.Remove(existingItem);
+            }
+        }
 
         /// <summary>
         /// Remove an item from the basket.
@@ -78,10 +90,8 @@ namespace BasketAPI.Controllers
         /// If the item does not exist in the basket, this method will return
         /// sucessfully regardless.
         /// </remarks>
-        [HttpDelete]
-        [HttpDelete("item-id/{itemId}")]
         public void RemoveItem(string itemId)
-            => Basket.RemoveItem(itemId);
+            => Items.Remove(FindById(itemId));
 
         /// <summary>
         /// Clears the basket of all items.
@@ -90,8 +100,16 @@ namespace BasketAPI.Controllers
         /// If the basket is already empty, this method will return succesfully
         /// regardless.
         /// </remarks>
-        [HttpDelete("all")]
-        public void ClearBasket()
-            => Basket.Clear();
+        public void Clear()
+            => Items.Clear();
+
+        #endregion
+
+        #region Internal Methods
+
+        internal BasketItem FindById(string itemId)
+            => Items.FirstOrDefault(item => item.Id == itemId);
+
+        #endregion
     }
 }
