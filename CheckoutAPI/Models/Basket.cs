@@ -35,6 +35,13 @@ namespace CheckoutAPI.Models
         /// </remarks>
         public void AddItem(string itemId, int quantity)
         {
+            var existingItem = FindById(itemId);
+            if (existingItem != null)
+            {
+                existingItem.Quantity += quantity;
+                return;
+            }
+            Items.Add(new BasketItem(itemId, quantity));
         }
 
         /// <summary>
@@ -54,6 +61,20 @@ namespace CheckoutAPI.Models
         /// </exception>
         public void EditItemQuantity(string itemId, int quantity)
         {
+            var existingItem = FindById(itemId);
+            if (existingItem == null)
+            {
+                throw new InvalidOperationException(
+                    "No such item exists in the basket.");
+            }
+            try
+            {
+                existingItem.Quantity = quantity;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Items.Remove(existingItem);
+            }
         }
 
         /// <summary>
@@ -65,8 +86,7 @@ namespace CheckoutAPI.Models
         /// sucessfully regardless.
         /// </remarks>
         public void RemoveItem(string itemId)
-        {
-        }
+            => Items.Remove(FindById(itemId));
 
         /// <summary>
         /// Clears the basket of all items.
@@ -76,8 +96,14 @@ namespace CheckoutAPI.Models
         /// regardless.
         /// </remarks>
         public void Clear()
-        {
-        }
+            => Items.Clear();
+
+        #endregion
+
+        #region Private Methods
+
+        private BasketItem FindById(string itemId)
+            => Items.FirstOrDefault(item => item.Id == itemId);
 
         #endregion
     }
