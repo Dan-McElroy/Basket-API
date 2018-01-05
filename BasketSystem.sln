@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketSystem.Models.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasketSystem.Models", "BasketSystem.Models\BasketSystem.Models.csproj", "{C94EB466-8B32-48EE-9EF9-B46AE6D296A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasketSystem.Client", "BasketSystem.Client\BasketSystem.Client.csproj", "{B49CC45E-F7A3-4D26-B58F-F04FF785CE86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasketSystem.Client", "BasketSystem.Client\BasketSystem.Client.csproj", "{D54A1BAB-7C28-4826-84C7-D0E2207EF85F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,10 +34,10 @@ Global
 		{C94EB466-8B32-48EE-9EF9-B46AE6D296A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C94EB466-8B32-48EE-9EF9-B46AE6D296A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C94EB466-8B32-48EE-9EF9-B46AE6D296A7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B49CC45E-F7A3-4D26-B58F-F04FF785CE86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B49CC45E-F7A3-4D26-B58F-F04FF785CE86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B49CC45E-F7A3-4D26-B58F-F04FF785CE86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B49CC45E-F7A3-4D26-B58F-F04FF785CE86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D54A1BAB-7C28-4826-84C7-D0E2207EF85F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D54A1BAB-7C28-4826-84C7-D0E2207EF85F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D54A1BAB-7C28-4826-84C7-D0E2207EF85F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D54A1BAB-7C28-4826-84C7-D0E2207EF85F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
