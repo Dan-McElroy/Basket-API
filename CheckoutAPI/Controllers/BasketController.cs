@@ -46,6 +46,7 @@ namespace CheckoutAPI.Controllers
                 throw new ArgumentOutOfRangeException(nameof(quantity), 
                     quantity, "Quantity must be greater than 0.");
             }
+            Basket.AddItem(itemId, quantity);
         }
 
         /// <summary>
@@ -66,9 +67,8 @@ namespace CheckoutAPI.Controllers
         [HttpPut]
         [HttpPut("item-id/{itemId}/quantity/{quantity}")]
         public void EditItemQuantity(string itemId, int quantity)
-        {
-            
-        }
+            => Basket.EditItemQuantity(itemId, quantity);
+
 
         /// <summary>
         /// Remove an item from the basket.
@@ -81,9 +81,7 @@ namespace CheckoutAPI.Controllers
         [HttpDelete]
         [HttpDelete("item-id/{itemId}")]
         public void RemoveItem(string itemId)
-        {
-            
-        }
+            => Basket.RemoveItem(itemId);
 
         /// <summary>
         /// Clears the basket of all items.
@@ -94,8 +92,6 @@ namespace CheckoutAPI.Controllers
         /// </remarks>
         [HttpDelete("all")]
         public void ClearBasket()
-        {
-            
-        }
+            => Basket.Clear();
     }
 }
