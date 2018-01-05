@@ -78,5 +78,7 @@ namespace CheckoutAPI.Models
         public void Clear()
         {
         }
+
+        #endregion
     }
 }
