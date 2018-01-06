@@ -1,8 +1,6 @@
 ﻿using BasketSystem.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BasketSystem.API.Models
 {
@@ -25,5 +23,8 @@ namespace BasketSystem.API.Models
 
         public IBasket FindBasket(Guid userToken)
             => Baskets.GetValueOrDefault(userToken);
+
+        public void RemoveBasket(Guid userToken)
+            => Baskets.Remove(userToken);
     }
 }

@@ -8,5 +8,7 @@ namespace BasketSystem.API.Models
         Guid CreateBasket();
 
         IBasket FindBasket(Guid userToken);
+
+        void RemoveBasket(Guid userToken);
     }
 }

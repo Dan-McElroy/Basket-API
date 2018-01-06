@@ -8,6 +8,8 @@ Considered using an IBasketItem interface, but BasketItem contains the bare mini
 
 EditItemQuantity in Basket relies on an exception for some non-error logic - not thrilled about this, but it was the cleanest way I could think of to enforce the > 1 constraint everywhere.
 
+Added RemoveBasket method for BasketRepository - current unused, but would be used on successful payment.
+
 ## Assumptions
 
 Strings for Item IDs.
