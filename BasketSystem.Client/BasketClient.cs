@@ -21,6 +21,11 @@ namespace BasketSystem.Client
         /// </summary>
         private readonly Guid _userToken;
 
+        /// <summary>
+        /// The start of each request string that specifies the user token.
+        /// </summary>
+        private string RequestPrefix => $"user-token/{_userToken}";
+
         public BasketClient()
         {
             _client = new HttpClient
@@ -74,7 +79,7 @@ namespace BasketSystem.Client
         /// <param name="itemId">The ID of the item to remove.</param>
         public async Task RemoveItemAsync(string itemId)
         {
-            await _client.DeleteAsync($"item-id/{itemId}");
+            await _client.DeleteAsync($"{RequestPrefix}/item-id/{itemId}");
         }
 
         /// <summary>
@@ -129,7 +134,7 @@ namespace BasketSystem.Client
         private async Task<BasketItem> SendBasketItemRequestAsync(
             string itemId, int quantity, HttpRequest request)
         {
-            var response = await request($"item-id/{itemId}/quantity/{quantity}",
+            var response = await request($"{RequestPrefix}/item-id/{itemId}/quantity/{quantity}",
                 null);
             return JsonConvert.DeserializeObject<BasketItem>(
                 await response.Content.ReadAsStringAsync());
