@@ -12,6 +12,7 @@ namespace BasketSystem.Client
     /// </summary>
     public class BasketClient : IDisposable
     {
+
         /// <summary>
         /// The <see cref="HttpClient"/> to send requests to the Basket API.
         /// </summary>
@@ -21,6 +22,11 @@ namespace BasketSystem.Client
         /// The unique token used to access the user's basket.
         /// </summary>
         public readonly Guid UserToken;
+
+        /// <summary>
+        /// An object storing the settings of the client.
+        /// </summary>
+        private Settings Settings { get; }
 
         /// <summary>
         /// The section of a  request string that specifies the user token.
@@ -35,12 +41,15 @@ namespace BasketSystem.Client
         /// If a token is not provided, then the client will create a new
         /// basket on the API and get a new token.
         /// </remarks>
-        public BasketClient(Guid? userToken = null)
+        public BasketClient(Settings settings, Guid? userToken = null)
         {
+            Settings = settings;
             _client = new HttpClient
             {
-                BaseAddress = new Uri("http://localhost:52349/api/v1/basket")
+                BaseAddress = new Uri(Settings.BaseUrl)
             };
+            _client.DefaultRequestHeaders.Add("api-version", Settings.ApiVersion);
+
             UserToken = userToken ?? Task.Run(CreateNewBasket).Result;
         }
 
@@ -88,7 +97,10 @@ namespace BasketSystem.Client
         /// <param name="itemId">The ID of the item to remove.</param>
         public async Task RemoveItemAsync(string itemId)
         {
-            await _client.DeleteAsync($"{TokenURLSegment}/item-id/{itemId}");
+            await _client.DeleteAsync(
+                Settings.RemoveItemEndpoint
+                .Replace(Settings.TOKENINSERT, UserToken.ToString())
+                .Replace(Settings.IDINSERT, itemId));
         }
 
         /// <summary>
@@ -96,7 +108,9 @@ namespace BasketSystem.Client
         /// </summary>
         public async Task ClearBasketAsync()
         {
-            await _client.DeleteAsync($"{TokenURLSegment}/all-items");
+            await _client.DeleteAsync(
+                Settings.ClearItemsEndpoint
+                .Replace(Settings.TOKENINSERT, UserToken.ToString()));
         }
 
         #region IDisposable Methods
@@ -119,7 +133,8 @@ namespace BasketSystem.Client
         /// <returns></returns>
         private async Task<Guid> CreateNewBasket()
         {
-            var response = await _client.PostAsync("new-basket", null);
+            var response = await _client.PostAsync(
+                Settings.BasketCreationEndpoint, null);
             return Guid.Parse(await response.Content.ReadAsStringAsync());
         }
 
