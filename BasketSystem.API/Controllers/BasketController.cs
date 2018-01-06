@@ -27,7 +27,7 @@ namespace BasketAPI.Controllers
         /// Creates a new <see cref="Basket"/> for the User.
         /// </summary>
         /// <returns>The token required to access this basket.</returns>
-        [HttpPost("new")]
+        [HttpPost("new-basket")]
         public Guid CreateBasket()
             => Repository.CreateBasket();
 
