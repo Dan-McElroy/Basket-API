@@ -58,7 +58,7 @@ namespace BasketSystem.Client
         /// <returns>
         /// The <see cref="BasketItem"/> added to the <see cref="Basket"/>.
         /// </returns>
-        public async Task<BasketItem> AddItemAsync(string itemId, int quantity)
+        public async Task<BasketItem> AddItemAsync(string itemId, int quantity = 1)
             => await SendBasketItemRequestAsync(
                 itemId, quantity, _client.PostAsync);
 
@@ -153,12 +153,22 @@ namespace BasketSystem.Client
         private async Task<BasketItem> SendBasketItemRequestAsync(
             string itemId, int quantity, HttpRequest request)
         {
-            var response = await request($"{RequestPrefix}/item-id/{itemId}/quantity/{quantity}",
-                null);
+            var response = await request(string.Empty, 
+                GetRequestContent(itemId, quantity));
+
             return JsonConvert.DeserializeObject<BasketItem>(
                 await response.Content.ReadAsStringAsync());
         }
 
+        /// <summary>
+        /// Creates request content from an item ID and quantity.
+        /// </summary>
+        /// <param name="itemId">The item ID related to the request.</param>
+        /// <param name="quantity">The quantity related to the request.</param>
+        /// <returns></returns>
+        private HttpContent GetRequestContent(string itemId, int quantity)
+            => new JsonContent(
+                new BasketRequest(UserToken, itemId, quantity));
 
         #endregion
     }
