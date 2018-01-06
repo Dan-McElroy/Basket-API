@@ -34,7 +34,6 @@ namespace BasketAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseMvc();
         }
     }

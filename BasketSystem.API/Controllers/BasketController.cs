@@ -93,7 +93,6 @@ namespace BasketAPI.Controllers
         /// If the item does not exist in the basket, this method will return
         /// sucessfully regardless.
         /// </remarks>
-        [HttpDelete]
         [HttpDelete("user-token/{token:guid}/item-id/{id}")]
         public void RemoveItem(Guid token, string id)
         {
