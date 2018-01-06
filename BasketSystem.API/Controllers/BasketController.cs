@@ -16,7 +16,7 @@ namespace BasketAPI.Controllers
         /// The basket for the system.
         /// </summary>
         private IBasket Basket { get; set; }
-
+        
         public BasketController(IBasket basket)
         {
             Basket = basket;
@@ -25,7 +25,7 @@ namespace BasketAPI.Controllers
         /// <summary>
         /// Adds an item by its unique ID to the basket.
         /// </summary>
-        /// <param name="itemId">The ID of the item to be added.</param>
+        /// <param name="id">The ID of the item to be added.</param>
         /// <param name="quantity">
         /// An optional quantity for the item - the default is 1.
         /// </param>
@@ -38,21 +38,21 @@ namespace BasketAPI.Controllers
         /// Thrown if the quantity provided is below 1.
         /// </exception>
         [HttpPost]
-        [HttpPost("item-id/{itemId}/quantity/{quantity}")]
-        public void AddItem(string itemId, int quantity = 1)
+        [HttpPost("item-id/{id}/quantity/{quantity}")]
+        public void AddItem(string id, int quantity = 1)
         {
             if (quantity < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity),
                     quantity, "Quantity must be greater than 0.");
             }
-            Basket.AddItem(itemId, quantity);
+            Basket.AddItem(id, quantity);
         }
 
         /// <summary>
         /// Changes the quantity of an item in the basket.
         /// </summary>
-        /// <param name="itemId">
+        /// <param name="id">
         /// The ID of the item to edit the quantity of.
         /// </param>
         /// <param name="quantity">The new quantity for the item.</param>
@@ -65,23 +65,23 @@ namespace BasketAPI.Controllers
         /// the basket.
         /// </exception>
         [HttpPut]
-        [HttpPut("item-id/{itemId}/quantity/{quantity}")]
-        public void EditItemQuantity(string itemId, int quantity)
-            => Basket.EditItemQuantity(itemId, quantity);
+        [HttpPut("item-id/{id}/quantity/{quantity}")]
+        public void EditItemQuantity(string id, int quantity)
+            => Basket.EditItemQuantity(id, quantity);
 
 
         /// <summary>
         /// Remove an item from the basket.
         /// </summary>
-        /// <param name="itemId">The ID of the item to remove.</param>
+        /// <param name="id">The ID of the item to remove.</param>
         /// <remarks>
         /// If the item does not exist in the basket, this method will return
         /// sucessfully regardless.
         /// </remarks>
         [HttpDelete]
-        [HttpDelete("item-id/{itemId}")]
-        public void RemoveItem(string itemId)
-            => Basket.RemoveItem(itemId);
+        [HttpDelete("item-id/{id}")]
+        public void RemoveItem(string id)
+            => Basket.RemoveItem(id);
 
         /// <summary>
         /// Clears the basket of all items.
