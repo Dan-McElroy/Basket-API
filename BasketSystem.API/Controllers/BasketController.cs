@@ -108,8 +108,8 @@ namespace BasketAPI.Controllers
         /// If the basket is already empty, this method will return succesfully
         /// regardless.
         /// </remarks>
-        [HttpDelete("all")]
-        [HttpDelete("user-token/{token:guid}/all")]
+        [HttpDelete("all-items")]
+        [HttpDelete("user-token/{token:guid}/all-items")]
         public void ClearBasket(Guid token)
         {
             var basket = FindUserBasket(token);
