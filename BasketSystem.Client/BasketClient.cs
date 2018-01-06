@@ -82,7 +82,7 @@ namespace BasketSystem.Client
         /// </summary>
         public async Task ClearBasketAsync()
         {
-            await _client.DeleteAsync("all");
+            await _client.DeleteAsync($"{RequestPrefix}/{_userToken}/all-items");
         }
 
         #region IDisposable Methods
