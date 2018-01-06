@@ -39,14 +39,14 @@ namespace BasketAPI.Controllers
         /// </exception>
         [HttpPost]
         [HttpPost("item-id/{id}/quantity/{quantity}")]
-        public void AddItem(string id, int quantity = 1)
+        public BasketItem AddItem(string id, int quantity = 1)
         {
             if (quantity < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity),
                     quantity, "Quantity must be greater than 0.");
             }
-            Basket.AddItem(id, quantity);
+            return Basket.AddItem(id, quantity);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace BasketAPI.Controllers
         /// </exception>
         [HttpPut]
         [HttpPut("item-id/{id}/quantity/{quantity}")]
-        public void EditItemQuantity(string id, int quantity)
+        public BasketItem EditItemQuantity(string id, int quantity)
             => Basket.EditItemQuantity(id, quantity);
 
 
