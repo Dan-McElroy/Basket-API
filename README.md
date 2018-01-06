@@ -6,6 +6,7 @@ Methods can use request body, route parameters and query string for parameters, 
 
 Considered using an IBasketItem interface, but BasketItem contains the bare minimum data and functionality, and can be easily subclassed for more detailed basket items.
 
+
 ## Assumptions
 
 Strings for Item IDs.
@@ -23,3 +24,5 @@ Endpoints will only send around string ID and int quantity, as for this small am
 Split the models into a separate library to allow internal methods and properties to be unit tested without exposing to the API.
 
 Internalised the collection itself in IBasket as though exposing it would keep the class simple, would also expose undesirable operations to the client.
+
+Took a simplistic route to thread-safety, locking on list of items for each Basket operation.

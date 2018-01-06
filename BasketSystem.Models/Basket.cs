@@ -11,7 +11,6 @@ namespace BasketSystem.Models
     /// </summary>
     public class Basket : IBasket
     {
-        // TODO Make threadsafe.
         /// <summary>
         /// A collection of items in the <see cref="Basket"/>.
         /// </summary>
@@ -38,15 +37,23 @@ namespace BasketSystem.Models
         /// If the item already exists in the basket, the existing quantity is
         /// increased by the amount specified.
         /// </remarks>
-        public void AddItem(string itemId, int quantity)
+        /// <returns>
+        /// The <see cref="BasketItem"/> added to the <see cref="Basket"/>.
+        /// </returns>
+        public BasketItem AddItem(string itemId, int quantity)
         {
-            var existingItem = FindById(itemId);
-            if (existingItem != null)
+            lock (Items)
             {
-                existingItem.Quantity += quantity;
-                return;
+                var existingItem = FindById(itemId);
+                if (existingItem != null)
+                {
+                    existingItem.Quantity += quantity;
+                    return existingItem;
+                }
+                var newItem = new BasketItem(itemId, quantity);
+                Items.Add(newItem);
+                return newItem;
             }
-            Items.Add(new BasketItem(itemId, quantity));
         }
 
         /// <summary>
@@ -64,21 +71,32 @@ namespace BasketSystem.Models
         /// Thrown if the item with the provided ID does not already exist in
         /// the basket.
         /// </exception>
-        public void EditItemQuantity(string itemId, int quantity)
+        /// <returns>
+        /// The edited <see cref="BasketItem"/>, or null if it has been 
+        /// removed.
+        /// </returns>
+        public BasketItem EditItemQuantity(string itemId, int quantity)
         {
-            var existingItem = FindById(itemId);
-            if (existingItem == null)
+            lock (Items)
             {
-                throw new InvalidOperationException(
-                    "No such item exists in the basket.");
-            }
-            try
-            {
-                existingItem.Quantity = quantity;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                Items.Remove(existingItem);
+                var existingItem = FindById(itemId);
+                if (existingItem == null)
+                {
+                    throw new InvalidOperationException(
+                        "No such item exists in the basket.");
+                }
+                try
+                {
+                    existingItem.Quantity = quantity;
+                    return existingItem;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // If thrown, quantity is below one and item should be
+                    // removed from the basket.
+                    Items.Remove(existingItem);
+                    return null;
+                }
             }
         }
 
@@ -91,7 +109,12 @@ namespace BasketSystem.Models
         /// sucessfully regardless.
         /// </remarks>
         public void RemoveItem(string itemId)
-            => Items.Remove(FindById(itemId));
+        {
+            lock (Items)
+            {
+                Items.Remove(FindById(itemId));
+            }
+        }
 
         /// <summary>
         /// Clears the basket of all items.
@@ -101,12 +124,25 @@ namespace BasketSystem.Models
         /// regardless.
         /// </remarks>
         public void Clear()
-            => Items.Clear();
+        {
+            lock (Items)
+            {
+                Items.Clear();
+            }
+        }
 
         #endregion
 
         #region Internal Methods
 
+        /// <summary>
+        /// Finds an item in the basket by its ID.
+        /// </summary>
+        /// <param name="itemId">The ID of the item to find.</param>
+        /// <returns>
+        /// The item with the given ID, or <see cref="null"/> if no
+        /// item is found.
+        /// </returns>
         internal BasketItem FindById(string itemId)
             => Items.FirstOrDefault(item => item.Id == itemId);
 
