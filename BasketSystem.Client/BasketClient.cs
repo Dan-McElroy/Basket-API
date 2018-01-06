@@ -1,4 +1,5 @@
-﻿using BasketSystem.Models;
+﻿using BasketSystem.Client.DTOs;
+using BasketSystem.Models;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -22,9 +23,9 @@ namespace BasketSystem.Client
         private readonly Guid _userToken;
 
         /// <summary>
-        /// The start of each request string that specifies the user token.
+        /// The section of a  request string that specifies the user token.
         /// </summary>
-        private string RequestPrefix => $"user-token/{_userToken}";
+        private string TokenURLSegment => $"user-token/{UserToken}";
 
         public BasketClient()
         {
@@ -79,7 +80,7 @@ namespace BasketSystem.Client
         /// <param name="itemId">The ID of the item to remove.</param>
         public async Task RemoveItemAsync(string itemId)
         {
-            await _client.DeleteAsync($"{RequestPrefix}/item-id/{itemId}");
+            await _client.DeleteAsync($"{TokenURLSegment}/item-id/{itemId}");
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace BasketSystem.Client
         /// </summary>
         public async Task ClearBasketAsync()
         {
-            await _client.DeleteAsync($"{RequestPrefix}/{_userToken}/all-items");
+            await _client.DeleteAsync($"{TokenURLSegment}/all-items");
         }
 
         #region IDisposable Methods
