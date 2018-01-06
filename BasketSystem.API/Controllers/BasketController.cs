@@ -10,7 +10,7 @@ namespace BasketAPI.Controllers
     /// </summary>
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/[controller]")]
     public class BasketController : Controller
     {
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using BasketSystem.API.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,7 +20,8 @@ namespace BasketAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddApiVersioning();
+            services.AddApiVersioning(
+                option => option.ApiVersionReader = new HeaderApiVersionReader("api-version"));
 
             // Allows Dependency Injection of the Basket Repository.
             services.AddSingleton<IBasketRepository, BasketRepository>();
