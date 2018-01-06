@@ -16,12 +16,18 @@ namespace BasketSystem.Client
         /// </summary>
         private HttpClient _client;
 
+        /// <summary>
+        /// The unique token used to access the user's basket.
+        /// </summary>
+        private readonly Guid _userToken;
+
         public BasketClient()
         {
             _client = new HttpClient
             {
                 BaseAddress = new Uri("http://localhost:52349/api/v1/basket")
             };
+            _userToken = Task.Run(CreateNewBasket).Result;
         }
 
         /// <summary>
@@ -127,6 +133,12 @@ namespace BasketSystem.Client
                 null);
             return JsonConvert.DeserializeObject<BasketItem>(
                 await response.Content.ReadAsStringAsync());
+        }
+
+        private async Task<Guid> CreateNewBasket()
+        {
+            var response = await _client.PostAsync("new", null);
+            return Guid.Parse(await response.Content.ReadAsStringAsync());
         }
 
         #endregion
