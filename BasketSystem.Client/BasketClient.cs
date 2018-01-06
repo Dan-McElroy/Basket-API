@@ -20,20 +20,28 @@ namespace BasketSystem.Client
         /// <summary>
         /// The unique token used to access the user's basket.
         /// </summary>
-        private readonly Guid _userToken;
+        public readonly Guid UserToken;
 
         /// <summary>
         /// The section of a  request string that specifies the user token.
         /// </summary>
         private string TokenURLSegment => $"user-token/{UserToken}";
 
-        public BasketClient()
+        /// <summary>
+        /// Creates a new client, either for an existing basket or a new one.
+        /// </summary>
+        /// <param name="userToken">The token of an existing basket.</param>
+        /// <remarks>
+        /// If a token is not provided, then the client will create a new
+        /// basket on the API and get a new token.
+        /// </remarks>
+        public BasketClient(Guid? userToken = null)
         {
             _client = new HttpClient
             {
                 BaseAddress = new Uri("http://localhost:52349/api/v1/basket")
             };
-            _userToken = Task.Run(CreateNewBasket).Result;
+            UserToken = userToken ?? Task.Run(CreateNewBasket).Result;
         }
 
         /// <summary>
@@ -106,6 +114,16 @@ namespace BasketSystem.Client
         #region Private Methods
 
         /// <summary>
+        /// Creates a new basket for the client.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<Guid> CreateNewBasket()
+        {
+            var response = await _client.PostAsync("new-basket", null);
+            return Guid.Parse(await response.Content.ReadAsStringAsync());
+        }
+
+        /// <summary>
         /// Defines a method which sends an HTTP request to a given endpoint, 
         /// and returns a response.
         /// </summary>
@@ -141,11 +159,6 @@ namespace BasketSystem.Client
                 await response.Content.ReadAsStringAsync());
         }
 
-        private async Task<Guid> CreateNewBasket()
-        {
-            var response = await _client.PostAsync("new", null);
-            return Guid.Parse(await response.Content.ReadAsStringAsync());
-        }
 
         #endregion
     }
