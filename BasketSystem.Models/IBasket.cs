@@ -30,8 +30,8 @@
         /// be removed from the basket.
         /// </remarks>
         /// <returns>
-        /// The edited <see cref="BasketItem"/>, or null if it has been 
-        /// removed.
+        /// The edited <see cref="BasketItem"/>, or <see cref="null"/>
+        /// if it has been removed.
         /// </returns>
         BasketItem EditItemQuantity(string itemId, int quantity);
 

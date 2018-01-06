@@ -51,12 +51,12 @@ namespace BasketAPI.Controllers
         [HttpPost("user-token/{token:guid}/item-id/{id}/quantity/{quantity}")]
         public BasketItem AddItem(Guid token, string id, int quantity = 1)
         {
-            var basket = FindUserBasket(token);
             if (quantity < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity),
                     quantity, "Quantity must be greater than 0.");
             }
+            var basket = FindUserBasket(token);
             return basket.AddItem(id, quantity);
         }
 
