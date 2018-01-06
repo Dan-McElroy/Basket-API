@@ -6,7 +6,7 @@ namespace BasketSystem.Client.DTOs
     /// Represents the body of a request to the Basket API which alters the 
     /// quantity of an item.
     /// </summary>
-    public class BasketRequest
+    internal class BasketRequest
     {
         /// <summary>
         /// The unique token to access the user's basket.
