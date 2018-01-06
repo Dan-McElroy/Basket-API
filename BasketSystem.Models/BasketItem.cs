@@ -40,7 +40,7 @@ namespace BasketSystem.Models
         /// <summary>
         /// Quantity of this item in the basket.
         /// </summary>
-        /// <remarks>Quantity cannot be set below 1.</remarks>
+        /// <remarks>Quantity must be greater than 0.</remarks>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Throws if set to a value less than 1.
         /// </exception>
@@ -49,13 +49,11 @@ namespace BasketSystem.Models
             get { return _quantity; }
             set
             {
-                if (value < 1)
-                {
-                    throw new ArgumentOutOfRangeException(
+                _quantity = value > 0
+                    ? value
+                    : throw new ArgumentOutOfRangeException(
                         nameof(value), value,
                         "Quantity must be greater than 0.");
-                }
-                _quantity = value;
             }
         }
 

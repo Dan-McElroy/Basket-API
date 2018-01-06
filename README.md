@@ -6,6 +6,7 @@ Methods can use request body, route parameters and query string for parameters, 
 
 Considered using an IBasketItem interface, but BasketItem contains the bare minimum data and functionality, and can be easily subclassed for more detailed basket items.
 
+EditItemQuantity in Basket relies on an exception for some non-error logic - not thrilled about this, but it was the cleanest way I could think of to enforce the > 1 constraint everywhere.
 
 ## Assumptions
 
