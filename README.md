@@ -14,6 +14,8 @@ Strings for Item IDs.
 
 All Item IDs are valid - not performing lookup on a store.
 
+By "client", I'm assuming a helper class to call the methods in the API - given that there are 4, any more than 1 class seems like over-engineering.
+
 ## Decisions
 
 While Add, Edit and Remove could all theoretically be handled by one endpoint, having one for each seemed the most user-friendly option.
@@ -27,3 +29,7 @@ Split the models into a separate library to allow internal methods and propertie
 Internalised the collection itself in IBasket as though exposing it would keep the class simple, would also expose undesirable operations to the client.
 
 Took a simplistic route to thread-safety, locking on list of items for each Basket operation.
+
+## TODO
+
+Make basket endpoints (strings) configurable for client.
