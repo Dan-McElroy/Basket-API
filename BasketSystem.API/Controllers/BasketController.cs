@@ -1,4 +1,5 @@
-﻿using BasketSystem.Models;
+﻿using BasketSystem.API.Models;
+using BasketSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -15,16 +16,25 @@ namespace BasketAPI.Controllers
         /// <summary>
         /// The basket for the system.
         /// </summary>
-        private IBasket Basket { get; set; }
+        private IBasketRepository Repository { get; set; }
         
-        public BasketController(IBasket basket)
+        public BasketController(IBasketRepository repository)
         {
-            Basket = basket;
+            Repository = repository;
         }
 
         /// <summary>
-        /// Adds an item by its unique ID to the basket.
+        /// Creates a new <see cref="Basket"/> for the User.
         /// </summary>
+        /// <returns>The token required to access this basket.</returns>
+        [HttpPost("new")]
+        public Guid CreateBasket()
+            => Repository.CreateBasket();
+
+        /// <summary>
+        /// Adds an item by its unique ID to the user's basket.
+        /// </summary>
+        /// <param name="token">The user's access token.</param>
         /// <param name="id">The ID of the item to be added.</param>
         /// <param name="quantity">
         /// An optional quantity for the item - the default is 1.
@@ -38,20 +48,22 @@ namespace BasketAPI.Controllers
         /// Thrown if the quantity provided is below 1.
         /// </exception>
         [HttpPost]
-        [HttpPost("item-id/{id}/quantity/{quantity}")]
-        public BasketItem AddItem(string id, int quantity = 1)
+        [HttpPost("user-token/{token:guid}/item-id/{id}/quantity/{quantity}")]
+        public BasketItem AddItem(Guid token, string id, int quantity = 1)
         {
+            var basket = FindUserBasket(token);
             if (quantity < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity),
                     quantity, "Quantity must be greater than 0.");
             }
-            return Basket.AddItem(id, quantity);
+            return basket.AddItem(id, quantity);
         }
 
         /// <summary>
-        /// Changes the quantity of an item in the basket.
+        /// Changes the quantity of an item in the user's basket.
         /// </summary>
+        /// <param name="token">The user's access token.</param>
         /// <param name="id">
         /// The ID of the item to edit the quantity of.
         /// </param>
@@ -65,9 +77,12 @@ namespace BasketAPI.Controllers
         /// the basket.
         /// </exception>
         [HttpPut]
-        [HttpPut("item-id/{id}/quantity/{quantity}")]
-        public BasketItem EditItemQuantity(string id, int quantity)
-            => Basket.EditItemQuantity(id, quantity);
+        [HttpPut("user-token/{token:guid}/item-id/{id}/quantity/{quantity}")]
+        public BasketItem EditItemQuantity(Guid token, string id, int quantity)
+        {
+            var basket = FindUserBasket(token);
+            return basket.EditItemQuantity(id, quantity);
+        }
 
 
         /// <summary>
@@ -79,19 +94,38 @@ namespace BasketAPI.Controllers
         /// sucessfully regardless.
         /// </remarks>
         [HttpDelete]
-        [HttpDelete("item-id/{id}")]
-        public void RemoveItem(string id)
-            => Basket.RemoveItem(id);
+        [HttpDelete("user-token/{token:guid}/item-id/{id}")]
+        public void RemoveItem(Guid token, string id)
+        {
+            var basket = FindUserBasket(token);
+            basket.RemoveItem(id);
+        }
 
         /// <summary>
-        /// Clears the basket of all items.
+        /// Clears the user's basket of all items.
         /// </summary>
         /// <remarks>
         /// If the basket is already empty, this method will return succesfully
         /// regardless.
         /// </remarks>
         [HttpDelete("all")]
-        public void ClearBasket()
-            => Basket.Clear();
+        [HttpDelete("user-token/{token:guid}/all")]
+        public void ClearBasket(Guid token)
+        {
+            var basket = FindUserBasket(token);
+            basket.Clear();
+        }
+
+        [NonAction]
+        public IBasket FindUserBasket(Guid userToken)
+        {
+            var basket = Repository.FindBasket(userToken);
+            if (basket == null)
+            {
+                throw new InvalidOperationException(
+                    "Basket for the specified token does not exist.");
+            }
+            return basket;
+        }
     }
 }
